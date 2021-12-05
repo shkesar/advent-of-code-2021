@@ -32,16 +32,23 @@
 
 ; Part 1
 
+(.indexOf (map
+            #(some #{true} %)
+            (map #(winning-board? % (take 26 called-nums)) boards)) true) ; 26
+
 (def wboard '(30 93 48 17 33 67 7 5 0 69 54 76 52 1 87 99 73 50 25 16 13 20 41 77 62))
 (def wcnums (take 26 called-nums))
 (def first-winning-board-value (board-value wboard wcnums))
 
 ; Part 2
 
-; fn to check how many numbers were called before the last board will win
-;
-(defn remaining-boards [boards cnums]
-  (filter #(not (winning-board? % cnums)) boards))
+(map
+  #(some #{true} %)
+  (map #(winning-board? % (take 86 called-nums)) boards))
+
+(.indexOf (map
+            #(some #{true} %)
+            (map #(winning-board? % (take 83 called-nums)) boards)) nil) ; 86
 
 (def last-won-board '(93 7 60 75 12 49 64 20 46 10 3 23 76 42 47 9 22 6 34 87 41 37 66 45 48))
 (def lwcnums (take 86 called-nums))
