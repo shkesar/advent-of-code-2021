@@ -5,9 +5,6 @@
 (def input (->> input-file
                 str/split-lines))
 
-(defn log [x] (do (println (x))
-                   x))
-
 ; Part 1
 (defn mcb-bit [bits] (if (>= (count (filter #(= % \1) bits)) (count (filter #(= % \0) bits))) \1 \0))
 (defn lcb-bit [bits] (if (< (count (filter #(= % \1) bits)) (count (filter #(= % \0) bits))) \1 \0))
@@ -22,16 +19,19 @@
 power-consumption
 
 ; Part 2
-(defn filter-by-bits
-  ([remains filter-bits] (filter-by-bits remains filter-bits 0))
-  ([remains filter-bits i] (if (> (count remains) 1)
-                             (filter-by-bits
-                               (filterv #(= (get % i) (get filter-bits i)) remains)
-                               filter-bits
-                               (do (println (str "i: " i " filter-bit: " (get filter-bits i) " remains: " (count remains))) (inc i)))
+(defn filter-by-bit
+  ([remains criteria] (filter-by-bit remains criteria 0))
+  ([remains criteria i] (if (> (count remains) 1)
+                             (filter-by-bit
+                               (filterv #(= (get % i) (criteria remains i)) remains)
+                               criteria
+                               (inc i))
                              remains)))
+(defn bit-criteria [input i bitf] (bitf (str/join (map #(get % i) input))))
+(defn mcb-bit-criteria [input i] (bit-criteria input i mcb-bit))
+(defn lcb-bit-criteria [input i] (bit-criteria input i lcb-bit))
 
-(def o2-reading (read-string (str "2r" (first (filter-by-bits input mcb-bits)))))
-(def co2-reading (read-string (str "2r" (first (filter-by-bits input lcb-bits)))))
+(def o2-reading (read-string (str "2r" (first (filter-by-bit input mcb-bit-criteria)))))
+(def co2-reading (read-string (str "2r" (first (filter-by-bit input lcb-bit-criteria)))))
 (def life-support-rating (* o2-reading co2-reading))
 life-support-rating
